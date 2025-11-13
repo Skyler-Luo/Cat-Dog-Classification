@@ -1,0 +1,123 @@
+{
+  "timestamp": "2025-11-12T14:47:34.404782",
+  "config": {
+    "model": "svm",
+    "cv": 5,
+    "scoring": "accuracy",
+    "beam_width": 5,
+    "enable_cache": false,
+    "image_size": 128,
+    "n_jobs": 16,
+    "pca_components": 512,
+    "dataset_dir": "dataset",
+    "split": "train",
+    "sample_ratio": 1.0
+  },
+  "best_result": {
+    "subset": [
+      "color_hist",
+      "corner_edge",
+      "edge_hist",
+      "gabor",
+      "glcm",
+      "hog",
+      "lbp",
+      "sift"
+    ],
+    "score": 0.801375,
+    "std": 0.010820986553914579,
+    "original_dim": 2696,
+    "pca": 512
+  },
+  "search_history": [
+    {
+      "step": 1,
+      "beam_size": 5,
+      "best_score": 0.7707499999999999
+    },
+    {
+      "step": 2,
+      "beam_size": 5,
+      "best_score": 0.784,
+      "evaluated": 35
+    },
+    {
+      "step": 3,
+      "beam_size": 5,
+      "best_score": 0.7932499999999999,
+      "evaluated": 30
+    },
+    {
+      "step": 4,
+      "beam_size": 5,
+      "best_score": 0.7975,
+      "evaluated": 25
+    },
+    {
+      "step": 5,
+      "beam_size": 5,
+      "best_score": 0.79925,
+      "evaluated": 20
+    },
+    {
+      "step": 6,
+      "beam_size": 5,
+      "best_score": 0.8003750000000001,
+      "evaluated": 18
+    },
+    {
+      "step": 7,
+      "beam_size": 5,
+      "best_score": 0.8011250000000001,
+      "evaluated": 13
+    },
+    {
+      "step": 8,
+      "beam_size": 5,
+      "best_score": 0.801375,
+      "evaluated": 10
+    }
+  ],
+  "feature_cache_info": {
+    "color_hist": {
+      "dim": 512,
+      "n_samples": 8000
+    },
+    "hog": {
+      "dim": 1764,
+      "n_samples": 8000
+    },
+    "sift": {
+      "dim": 291,
+      "n_samples": 8000
+    },
+    "lbp": {
+      "dim": 10,
+      "n_samples": 8000
+    },
+    "color_moments": {
+      "dim": 9,
+      "n_samples": 8000
+    },
+    "hu_moments": {
+      "dim": 7,
+      "n_samples": 8000
+    },
+    "glcm": {
+      "dim": 6,
+      "n_samples": 8000
+    },
+    "gabor": {
+      "dim": 64,
+      "n_samples": 8000
+    },
+    "edge_hist": {
+      "dim": 42,
+      "n_samples": 8000
+    },
+    "corner_edge": {
+      "dim": 7,
+      "n_samples": 8000
+    }
+  }
+}

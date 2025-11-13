@@ -1,0 +1,332 @@
+2025-11-12 14:12:09 | feature_search | INFO | 📝 日志将保存到: runs/feature_search/feature_search.log
+2025-11-12 14:12:09 | feature_search | INFO | 🚀 启动特征搜索
+2025-11-12 14:12:09 | feature_search | INFO | 📦 使用全部 8000 张图像
+2025-11-12 14:12:09 | feature_search | INFO | 🔧 提取特征: color_hist
+2025-11-12 14:12:10 | feature_search | INFO |    ✓ 维度 512 | 样本 8000
+2025-11-12 14:12:10 | feature_search | INFO | 🔧 提取特征: hog
+2025-11-12 14:12:38 | feature_search | INFO |    ✓ 维度 1764 | 样本 8000
+2025-11-12 14:12:38 | feature_search | INFO | 🔧 提取特征: sift
+2025-11-12 14:12:45 | feature_search | INFO |    ✓ 维度 291 | 样本 8000
+2025-11-12 14:12:45 | feature_search | INFO | 🔧 提取特征: lbp
+2025-11-12 14:12:47 | feature_search | INFO |    ✓ 维度 10 | 样本 8000
+2025-11-12 14:12:47 | feature_search | INFO | 🔧 提取特征: color_moments
+2025-11-12 14:12:54 | feature_search | INFO |    ✓ 维度 9 | 样本 8000
+2025-11-12 14:12:54 | feature_search | INFO | 🔧 提取特征: hu_moments
+2025-11-12 14:12:55 | feature_search | INFO |    ✓ 维度 7 | 样本 8000
+2025-11-12 14:12:55 | feature_search | INFO | 🔧 提取特征: glcm
+2025-11-12 14:14:04 | feature_search | INFO |    ✓ 维度 6 | 样本 8000
+2025-11-12 14:14:04 | feature_search | INFO | 🔧 提取特征: gabor
+2025-11-12 14:15:10 | feature_search | INFO |    ✓ 维度 64 | 样本 8000
+2025-11-12 14:15:10 | feature_search | INFO | 🔧 提取特征: edge_hist
+2025-11-12 14:15:16 | feature_search | INFO |    ✓ 维度 42 | 样本 8000
+2025-11-12 14:15:16 | feature_search | INFO | 🔧 提取特征: corner_edge
+2025-11-12 14:15:19 | feature_search | INFO |    ✓ 维度 7 | 样本 8000
+2025-11-12 14:15:19 | feature_search | INFO | 
+2025-11-12 14:15:19 | feature_search | INFO | ============================================================
+2025-11-12 14:15:19 | feature_search | INFO | 开始特征组合搜索（束搜索）
+2025-11-12 14:15:19 | feature_search | INFO | ============================================================
+2025-11-12 14:15:19 | feature_search | INFO | 🔍 束搜索 (Beam Search)
+2025-11-12 14:15:19 | feature_search | INFO |    特征池大小: 10
+2025-11-12 14:15:19 | feature_search | INFO |    最大组合数: 8
+2025-11-12 14:15:19 | feature_search | INFO |    束宽: 5
+2025-11-12 14:15:19 | feature_search | INFO | 📊 第 1 步: 评估单特征组合
+2025-11-12 14:15:35 | feature_search | INFO |    • color_hist -> 0.6236 ± 0.0071
+2025-11-12 14:15:49 | feature_search | INFO |    • hog -> 0.7707 ± 0.0136
+2025-11-12 14:15:56 | feature_search | INFO |    • sift -> 0.7082 ± 0.0147
+2025-11-12 14:15:57 | feature_search | INFO |    • lbp -> 0.6398 ± 0.0093
+2025-11-12 14:15:58 | feature_search | INFO |    • color_moments -> 0.6102 ± 0.0126
+2025-11-12 14:15:59 | feature_search | INFO |    • hu_moments -> 0.5447 ± 0.0093
+2025-11-12 14:16:00 | feature_search | INFO |    • glcm -> 0.6346 ± 0.0127
+2025-11-12 14:16:01 | feature_search | INFO |    • gabor -> 0.6291 ± 0.0102
+2025-11-12 14:16:02 | feature_search | INFO |    • edge_hist -> 0.6447 ± 0.0119
+2025-11-12 14:16:03 | feature_search | INFO |    • corner_edge -> 0.6297 ± 0.0091
+2025-11-12 14:16:03 | feature_search | INFO |    ✅ 保留 top 5 个候选
+2025-11-12 14:16:03 | feature_search | INFO |       1. 0.7707 | hog
+2025-11-12 14:16:03 | feature_search | INFO |       2. 0.7082 | sift
+2025-11-12 14:16:03 | feature_search | INFO |       3. 0.6447 | edge_hist
+2025-11-12 14:16:03 | feature_search | INFO |       4. 0.6398 | lbp
+2025-11-12 14:16:03 | feature_search | INFO |       5. 0.6346 | glcm
+2025-11-12 14:16:03 | feature_search | INFO | 
+2025-11-12 14:16:03 | feature_search | INFO | 📊 第 2 步: 扩展束 (当前束大小: 5)
+2025-11-12 14:16:17 | feature_search | INFO |    • color_hist + hog -> 0.7806 ± 0.0124 (2276 维 + PCA(512))
+2025-11-12 14:16:31 | feature_search | INFO |    • hog + sift -> 0.7840 ± 0.0122 (2055 维 + PCA(512))
+2025-11-12 14:16:45 | feature_search | INFO |    • hog + lbp -> 0.7724 ± 0.0124 (1774 维 + PCA(512))
+2025-11-12 14:17:00 | feature_search | INFO |    • color_moments + hog -> 0.7768 ± 0.0125 (1773 维 + PCA(512))
+2025-11-12 14:17:14 | feature_search | INFO |    • hog + hu_moments -> 0.7715 ± 0.0132 (1771 维 + PCA(512))
+2025-11-12 14:17:28 | feature_search | INFO |    • glcm + hog -> 0.7805 ± 0.0130 (1770 维 + PCA(512))
+2025-11-12 14:17:42 | feature_search | INFO |    • gabor + hog -> 0.7785 ± 0.0092 (1828 维 + PCA(512))
+2025-11-12 14:17:56 | feature_search | INFO |    • edge_hist + hog -> 0.7756 ± 0.0114 (1806 维 + PCA(512))
+2025-11-12 14:18:10 | feature_search | INFO |    • corner_edge + hog -> 0.7785 ± 0.0133 (1771 维 + PCA(512))
+2025-11-12 14:18:25 | feature_search | INFO |    • color_hist + sift -> 0.7075 ± 0.0078 (803 维 + PCA(512))
+2025-11-12 14:18:32 | feature_search | INFO |    • lbp + sift -> 0.7242 ± 0.0154 (301 维)
+2025-11-12 14:18:40 | feature_search | INFO |    • color_moments + sift -> 0.7164 ± 0.0125 (300 维)
+2025-11-12 14:18:47 | feature_search | INFO |    • hu_moments + sift -> 0.7077 ± 0.0126 (298 维)
+2025-11-12 14:18:54 | feature_search | INFO |    • glcm + sift -> 0.7194 ± 0.0142 (297 维)
+2025-11-12 14:19:03 | feature_search | INFO |    • gabor + sift -> 0.7238 ± 0.0147 (355 维)
+2025-11-12 14:19:11 | feature_search | INFO |    • edge_hist + sift -> 0.7198 ± 0.0090 (333 维)
+2025-11-12 14:19:19 | feature_search | INFO |    • corner_edge + sift -> 0.7169 ± 0.0091 (298 维)
+2025-11-12 14:19:33 | feature_search | INFO |    • color_hist + edge_hist -> 0.6588 ± 0.0078 (554 维 + PCA(512))
+2025-11-12 14:19:34 | feature_search | INFO |    • edge_hist + lbp -> 0.6646 ± 0.0072 (52 维)
+2025-11-12 14:19:35 | feature_search | INFO |    • color_moments + edge_hist -> 0.6763 ± 0.0099 (51 维)
+2025-11-12 14:19:36 | feature_search | INFO |    • edge_hist + hu_moments -> 0.6459 ± 0.0135 (49 维)
+2025-11-12 14:19:37 | feature_search | INFO |    • edge_hist + glcm -> 0.6701 ± 0.0127 (48 维)
+2025-11-12 14:19:39 | feature_search | INFO |    • edge_hist + gabor -> 0.6601 ± 0.0129 (106 维)
+2025-11-12 14:19:40 | feature_search | INFO |    • corner_edge + edge_hist -> 0.6565 ± 0.0120 (49 维)
+2025-11-12 14:19:55 | feature_search | INFO |    • color_hist + lbp -> 0.6516 ± 0.0060 (522 维 + PCA(512))
+2025-11-12 14:19:55 | feature_search | INFO |    • color_moments + lbp -> 0.6550 ± 0.0062 (19 维)
+2025-11-12 14:19:56 | feature_search | INFO |    • hu_moments + lbp -> 0.6396 ± 0.0079 (17 维)
+2025-11-12 14:19:57 | feature_search | INFO |    • glcm + lbp -> 0.6665 ± 0.0075 (16 维)
+2025-11-12 14:19:58 | feature_search | INFO |    • gabor + lbp -> 0.6646 ± 0.0077 (74 维)
+2025-11-12 14:19:59 | feature_search | INFO |    • corner_edge + lbp -> 0.6737 ± 0.0138 (17 维)
+2025-11-12 14:20:13 | feature_search | INFO |    • color_hist + glcm -> 0.6495 ± 0.0075 (518 维 + PCA(512))
+2025-11-12 14:20:14 | feature_search | INFO |    • color_moments + glcm -> 0.6534 ± 0.0106 (15 维)
+2025-11-12 14:20:15 | feature_search | INFO |    • glcm + hu_moments -> 0.6241 ± 0.0127 (13 维)
+2025-11-12 14:20:16 | feature_search | INFO |    • gabor + glcm -> 0.6386 ± 0.0152 (70 维)
+2025-11-12 14:20:17 | feature_search | INFO |    • corner_edge + glcm -> 0.6615 ± 0.0058 (13 维)
+2025-11-12 14:20:17 | feature_search | INFO |    ✅ 保留 top 5 个候选
+2025-11-12 14:20:17 | feature_search | INFO |       1. 0.7840 ± 0.0122 | hog + sift
+2025-11-12 14:20:17 | feature_search | INFO |       2. 0.7806 ± 0.0124 | color_hist + hog
+2025-11-12 14:20:17 | feature_search | INFO |       3. 0.7805 ± 0.0130 | glcm + hog
+2025-11-12 14:20:17 | feature_search | INFO |       4. 0.7785 ± 0.0092 | gabor + hog
+2025-11-12 14:20:17 | feature_search | INFO |       5. 0.7785 ± 0.0133 | corner_edge + hog
+2025-11-12 14:20:17 | feature_search | INFO | 
+2025-11-12 14:20:17 | feature_search | INFO | 📊 第 3 步: 扩展束 (当前束大小: 5)
+2025-11-12 14:20:31 | feature_search | INFO |    • color_hist + hog + sift -> 0.7932 ± 0.0128 (2567 维 + PCA(512))
+2025-11-12 14:20:45 | feature_search | INFO |    • hog + lbp + sift -> 0.7893 ± 0.0109 (2065 维 + PCA(512))
+2025-11-12 14:20:59 | feature_search | INFO |    • color_moments + hog + sift -> 0.7879 ± 0.0127 (2064 维 + PCA(512))
+2025-11-12 14:21:13 | feature_search | INFO |    • hog + hu_moments + sift -> 0.7853 ± 0.0114 (2062 维 + PCA(512))
+2025-11-12 14:21:27 | feature_search | INFO |    • glcm + hog + sift -> 0.7879 ± 0.0105 (2061 维 + PCA(512))
+2025-11-12 14:21:41 | feature_search | INFO |    • gabor + hog + sift -> 0.7889 ± 0.0127 (2119 维 + PCA(512))
+2025-11-12 14:21:55 | feature_search | INFO |    • edge_hist + hog + sift -> 0.7889 ± 0.0117 (2097 维 + PCA(512))
+2025-11-12 14:22:10 | feature_search | INFO |    • corner_edge + hog + sift -> 0.7886 ± 0.0112 (2062 维 + PCA(512))
+2025-11-12 14:22:24 | feature_search | INFO |    • color_hist + hog + lbp -> 0.7812 ± 0.0112 (2286 维 + PCA(512))
+2025-11-12 14:22:38 | feature_search | INFO |    • color_hist + color_moments + hog -> 0.7786 ± 0.0121 (2285 维 + PCA(512))
+2025-11-12 14:22:53 | feature_search | INFO |    • color_hist + hog + hu_moments -> 0.7801 ± 0.0127 (2283 维 + PCA(512))
+2025-11-12 14:23:07 | feature_search | INFO |    • color_hist + glcm + hog -> 0.7813 ± 0.0112 (2282 维 + PCA(512))
+2025-11-12 14:23:21 | feature_search | INFO |    • color_hist + gabor + hog -> 0.7860 ± 0.0119 (2340 维 + PCA(512))
+2025-11-12 14:23:36 | feature_search | INFO |    • color_hist + edge_hist + hog -> 0.7835 ± 0.0117 (2318 维 + PCA(512))
+2025-11-12 14:23:50 | feature_search | INFO |    • color_hist + corner_edge + hog -> 0.7835 ± 0.0121 (2283 维 + PCA(512))
+2025-11-12 14:24:04 | feature_search | INFO |    • glcm + hog + lbp -> 0.7797 ± 0.0128 (1780 维 + PCA(512))
+2025-11-12 14:24:19 | feature_search | INFO |    • color_moments + glcm + hog -> 0.7801 ± 0.0111 (1779 维 + PCA(512))
+2025-11-12 14:24:33 | feature_search | INFO |    • glcm + hog + hu_moments -> 0.7790 ± 0.0122 (1777 维 + PCA(512))
+2025-11-12 14:24:47 | feature_search | INFO |    • gabor + glcm + hog -> 0.7786 ± 0.0116 (1834 维 + PCA(512))
+2025-11-12 14:25:01 | feature_search | INFO |    • edge_hist + glcm + hog -> 0.7806 ± 0.0099 (1812 维 + PCA(512))
+2025-11-12 14:25:16 | feature_search | INFO |    • corner_edge + glcm + hog -> 0.7811 ± 0.0105 (1777 维 + PCA(512))
+2025-11-12 14:25:30 | feature_search | INFO |    • gabor + hog + lbp -> 0.7825 ± 0.0105 (1838 维 + PCA(512))
+2025-11-12 14:25:44 | feature_search | INFO |    • color_moments + gabor + hog -> 0.7802 ± 0.0100 (1837 维 + PCA(512))
+2025-11-12 14:25:58 | feature_search | INFO |    • gabor + hog + hu_moments -> 0.7776 ± 0.0108 (1835 维 + PCA(512))
+2025-11-12 14:26:12 | feature_search | INFO |    • edge_hist + gabor + hog -> 0.7798 ± 0.0097 (1870 维 + PCA(512))
+2025-11-12 14:26:26 | feature_search | INFO |    • corner_edge + gabor + hog -> 0.7784 ± 0.0119 (1835 维 + PCA(512))
+2025-11-12 14:26:40 | feature_search | INFO |    • corner_edge + hog + lbp -> 0.7786 ± 0.0121 (1781 维 + PCA(512))
+2025-11-12 14:26:55 | feature_search | INFO |    • color_moments + corner_edge + hog -> 0.7833 ± 0.0140 (1780 维 + PCA(512))
+2025-11-12 14:27:09 | feature_search | INFO |    • corner_edge + hog + hu_moments -> 0.7792 ± 0.0136 (1778 维 + PCA(512))
+2025-11-12 14:27:24 | feature_search | INFO |    • corner_edge + edge_hist + hog -> 0.7789 ± 0.0114 (1813 维 + PCA(512))
+2025-11-12 14:27:24 | feature_search | INFO |    ✅ 保留 top 5 个候选
+2025-11-12 14:27:24 | feature_search | INFO |       1. 0.7932 ± 0.0128 | color_hist + hog + sift
+2025-11-12 14:27:24 | feature_search | INFO |       2. 0.7893 ± 0.0109 | hog + lbp + sift
+2025-11-12 14:27:24 | feature_search | INFO |       3. 0.7889 ± 0.0117 | edge_hist + hog + sift
+2025-11-12 14:27:24 | feature_search | INFO |       4. 0.7889 ± 0.0127 | gabor + hog + sift
+2025-11-12 14:27:24 | feature_search | INFO |       5. 0.7886 ± 0.0112 | corner_edge + hog + sift
+2025-11-12 14:27:24 | feature_search | INFO | 
+2025-11-12 14:27:24 | feature_search | INFO | 📊 第 4 步: 扩展束 (当前束大小: 5)
+2025-11-12 14:27:38 | feature_search | INFO |    • color_hist + hog + lbp + sift -> 0.7968 ± 0.0138 (2577 维 + PCA(512))
+2025-11-12 14:27:52 | feature_search | INFO |    • color_hist + color_moments + hog + sift -> 0.7950 ± 0.0125 (2576 维 + PCA(512))
+2025-11-12 14:28:06 | feature_search | INFO |    • color_hist + hog + hu_moments + sift -> 0.7926 ± 0.0134 (2574 维 + PCA(512))
+2025-11-12 14:28:20 | feature_search | INFO |    • color_hist + glcm + hog + sift -> 0.7975 ± 0.0133 (2573 维 + PCA(512))
+2025-11-12 14:28:35 | feature_search | INFO |    • color_hist + gabor + hog + sift -> 0.7964 ± 0.0104 (2631 维 + PCA(512))
+2025-11-12 14:28:49 | feature_search | INFO |    • color_hist + edge_hist + hog + sift -> 0.7940 ± 0.0132 (2609 维 + PCA(512))
+2025-11-12 14:29:03 | feature_search | INFO |    • color_hist + corner_edge + hog + sift -> 0.7965 ± 0.0127 (2574 维 + PCA(512))
+2025-11-12 14:29:17 | feature_search | INFO |    • color_moments + hog + lbp + sift -> 0.7907 ± 0.0129 (2074 维 + PCA(512))
+2025-11-12 14:29:31 | feature_search | INFO |    • hog + hu_moments + lbp + sift -> 0.7885 ± 0.0113 (2072 维 + PCA(512))
+2025-11-12 14:29:45 | feature_search | INFO |    • glcm + hog + lbp + sift -> 0.7919 ± 0.0104 (2071 维 + PCA(512))
+2025-11-12 14:29:59 | feature_search | INFO |    • gabor + hog + lbp + sift -> 0.7904 ± 0.0094 (2129 维 + PCA(512))
+2025-11-12 14:30:13 | feature_search | INFO |    • edge_hist + hog + lbp + sift -> 0.7894 ± 0.0118 (2107 维 + PCA(512))
+2025-11-12 14:30:27 | feature_search | INFO |    • corner_edge + hog + lbp + sift -> 0.7901 ± 0.0104 (2072 维 + PCA(512))
+2025-11-12 14:30:41 | feature_search | INFO |    • color_moments + edge_hist + hog + sift -> 0.7903 ± 0.0115 (2106 维 + PCA(512))
+2025-11-12 14:30:55 | feature_search | INFO |    • edge_hist + hog + hu_moments + sift -> 0.7854 ± 0.0109 (2104 维 + PCA(512))
+2025-11-12 14:31:09 | feature_search | INFO |    • edge_hist + glcm + hog + sift -> 0.7895 ± 0.0103 (2103 维 + PCA(512))
+2025-11-12 14:31:23 | feature_search | INFO |    • edge_hist + gabor + hog + sift -> 0.7914 ± 0.0117 (2161 维 + PCA(512))
+2025-11-12 14:31:38 | feature_search | INFO |    • corner_edge + edge_hist + hog + sift -> 0.7886 ± 0.0109 (2104 维 + PCA(512))
+2025-11-12 14:31:52 | feature_search | INFO |    • color_moments + gabor + hog + sift -> 0.7901 ± 0.0130 (2128 维 + PCA(512))
+2025-11-12 14:32:06 | feature_search | INFO |    • gabor + hog + hu_moments + sift -> 0.7882 ± 0.0104 (2126 维 + PCA(512))
+2025-11-12 14:32:20 | feature_search | INFO |    • gabor + glcm + hog + sift -> 0.7903 ± 0.0101 (2125 维 + PCA(512))
+2025-11-12 14:32:34 | feature_search | INFO |    • corner_edge + gabor + hog + sift -> 0.7927 ± 0.0126 (2126 维 + PCA(512))
+2025-11-12 14:32:48 | feature_search | INFO |    • color_moments + corner_edge + hog + sift -> 0.7915 ± 0.0108 (2071 维 + PCA(512))
+2025-11-12 14:33:02 | feature_search | INFO |    • corner_edge + hog + hu_moments + sift -> 0.7876 ± 0.0122 (2069 维 + PCA(512))
+2025-11-12 14:33:16 | feature_search | INFO |    • corner_edge + glcm + hog + sift -> 0.7899 ± 0.0107 (2068 维 + PCA(512))
+2025-11-12 14:33:16 | feature_search | INFO |    ✅ 保留 top 5 个候选
+2025-11-12 14:33:16 | feature_search | INFO |       1. 0.7975 ± 0.0133 | color_hist + glcm + hog + sift
+2025-11-12 14:33:16 | feature_search | INFO |       2. 0.7968 ± 0.0138 | color_hist + hog + lbp + sift
+2025-11-12 14:33:16 | feature_search | INFO |       3. 0.7965 ± 0.0127 | color_hist + corner_edge + hog + sift
+2025-11-12 14:33:16 | feature_search | INFO |       4. 0.7964 ± 0.0104 | color_hist + gabor + hog + sift
+2025-11-12 14:33:16 | feature_search | INFO |       5. 0.7950 ± 0.0125 | color_hist + color_moments + hog + sift
+2025-11-12 14:33:16 | feature_search | INFO | 
+2025-11-12 14:33:16 | feature_search | INFO | 📊 第 5 步: 扩展束 (当前束大小: 5)
+2025-11-12 14:33:30 | feature_search | INFO |    • color_hist + glcm + hog + lbp + sift -> 0.7985 ± 0.0146 (2583 维 + PCA(512))
+2025-11-12 14:33:44 | feature_search | INFO |    • color_hist + color_moments + glcm + hog + sift -> 0.7988 ± 0.0147 (2582 维 + PCA(512))
+2025-11-12 14:33:58 | feature_search | INFO |    • color_hist + glcm + hog + hu_moments + sift -> 0.7962 ± 0.0138 (2580 维 + PCA(512))
+2025-11-12 14:34:12 | feature_search | INFO |    • color_hist + gabor + glcm + hog + sift -> 0.7959 ± 0.0117 (2637 维 + PCA(512))
+2025-11-12 14:34:26 | feature_search | INFO |    • color_hist + edge_hist + glcm + hog + sift -> 0.7953 ± 0.0142 (2615 维 + PCA(512))
+2025-11-12 14:34:40 | feature_search | INFO |    • color_hist + corner_edge + glcm + hog + sift -> 0.7960 ± 0.0119 (2580 维 + PCA(512))
+2025-11-12 14:34:54 | feature_search | INFO |    • color_hist + color_moments + hog + lbp + sift -> 0.7979 ± 0.0146 (2586 维 + PCA(512))
+2025-11-12 14:35:08 | feature_search | INFO |    • color_hist + hog + hu_moments + lbp + sift -> 0.7974 ± 0.0140 (2584 维 + PCA(512))
+2025-11-12 14:35:22 | feature_search | INFO |    • color_hist + gabor + hog + lbp + sift -> 0.7993 ± 0.0143 (2641 维 + PCA(512))
+2025-11-12 14:35:36 | feature_search | INFO |    • color_hist + edge_hist + hog + lbp + sift -> 0.7981 ± 0.0153 (2619 维 + PCA(512))
+2025-11-12 14:35:50 | feature_search | INFO |    • color_hist + corner_edge + hog + lbp + sift -> 0.7987 ± 0.0137 (2584 维 + PCA(512))
+2025-11-12 14:36:05 | feature_search | INFO |    • color_hist + color_moments + corner_edge + hog + sift -> 0.7954 ± 0.0118 (2583 维 + PCA(512))
+2025-11-12 14:36:19 | feature_search | INFO |    • color_hist + corner_edge + hog + hu_moments + sift -> 0.7953 ± 0.0142 (2581 维 + PCA(512))
+2025-11-12 14:36:33 | feature_search | INFO |    • color_hist + corner_edge + gabor + hog + sift -> 0.7975 ± 0.0097 (2638 维 + PCA(512))
+2025-11-12 14:36:47 | feature_search | INFO |    • color_hist + corner_edge + edge_hist + hog + sift -> 0.7965 ± 0.0148 (2616 维 + PCA(512))
+2025-11-12 14:37:01 | feature_search | INFO |    • color_hist + color_moments + gabor + hog + sift -> 0.7963 ± 0.0107 (2640 维 + PCA(512))
+2025-11-12 14:37:15 | feature_search | INFO |    • color_hist + gabor + hog + hu_moments + sift -> 0.7970 ± 0.0111 (2638 维 + PCA(512))
+2025-11-12 14:37:30 | feature_search | INFO |    • color_hist + edge_hist + gabor + hog + sift -> 0.7950 ± 0.0108 (2673 维 + PCA(512))
+2025-11-12 14:37:44 | feature_search | INFO |    • color_hist + color_moments + hog + hu_moments + sift -> 0.7940 ± 0.0133 (2583 维 + PCA(512))
+2025-11-12 14:37:58 | feature_search | INFO |    • color_hist + color_moments + edge_hist + hog + sift -> 0.7963 ± 0.0135 (2618 维 + PCA(512))
+2025-11-12 14:37:58 | feature_search | INFO |    ✅ 保留 top 5 个候选
+2025-11-12 14:37:58 | feature_search | INFO |       1. 0.7993 ± 0.0143 | color_hist + gabor + hog + lbp + sift
+2025-11-12 14:37:58 | feature_search | INFO |       2. 0.7988 ± 0.0147 | color_hist + color_moments + glcm + hog + sift
+2025-11-12 14:37:58 | feature_search | INFO |       3. 0.7987 ± 0.0137 | color_hist + corner_edge + hog + lbp + sift
+2025-11-12 14:37:58 | feature_search | INFO |       4. 0.7985 ± 0.0146 | color_hist + glcm + hog + lbp + sift
+2025-11-12 14:37:58 | feature_search | INFO |       5. 0.7981 ± 0.0153 | color_hist + edge_hist + hog + lbp + sift
+2025-11-12 14:37:58 | feature_search | INFO | 
+2025-11-12 14:37:58 | feature_search | INFO | 📊 第 6 步: 扩展束 (当前束大小: 5)
+2025-11-12 14:38:12 | feature_search | INFO |    • color_hist + color_moments + gabor + hog + lbp + sift -> 0.8000 ± 0.0117 (2650 维 + PCA(512))
+2025-11-12 14:38:26 | feature_search | INFO |    • color_hist + gabor + hog + hu_moments + lbp + sift -> 0.7994 ± 0.0115 (2648 维 + PCA(512))
+2025-11-12 14:38:40 | feature_search | INFO |    • color_hist + gabor + glcm + hog + lbp + sift -> 0.8004 ± 0.0121 (2647 维 + PCA(512))
+2025-11-12 14:38:54 | feature_search | INFO |    • color_hist + edge_hist + gabor + hog + lbp + sift -> 0.7998 ± 0.0136 (2683 维 + PCA(512))
+2025-11-12 14:39:08 | feature_search | INFO |    • color_hist + corner_edge + gabor + hog + lbp + sift -> 0.7991 ± 0.0127 (2648 维 + PCA(512))
+2025-11-12 14:39:23 | feature_search | INFO |    • color_hist + color_moments + glcm + hog + lbp + sift -> 0.7999 ± 0.0123 (2592 维 + PCA(512))
+2025-11-12 14:39:37 | feature_search | INFO |    • color_hist + color_moments + glcm + hog + hu_moments + sift -> 0.7970 ± 0.0123 (2589 维 + PCA(512))
+2025-11-12 14:39:51 | feature_search | INFO |    • color_hist + color_moments + gabor + glcm + hog + sift -> 0.7991 ± 0.0123 (2646 维 + PCA(512))
+2025-11-12 14:40:05 | feature_search | INFO |    • color_hist + color_moments + edge_hist + glcm + hog + sift -> 0.7962 ± 0.0129 (2624 维 + PCA(512))
+2025-11-12 14:40:19 | feature_search | INFO |    • color_hist + color_moments + corner_edge + glcm + hog + sift -> 0.7950 ± 0.0134 (2589 维 + PCA(512))
+2025-11-12 14:40:33 | feature_search | INFO |    • color_hist + color_moments + corner_edge + hog + lbp + sift -> 0.7965 ± 0.0126 (2593 维 + PCA(512))
+2025-11-12 14:40:47 | feature_search | INFO |    • color_hist + corner_edge + hog + hu_moments + lbp + sift -> 0.7964 ± 0.0139 (2591 维 + PCA(512))
+2025-11-12 14:41:01 | feature_search | INFO |    • color_hist + corner_edge + glcm + hog + lbp + sift -> 0.7975 ± 0.0118 (2590 维 + PCA(512))
+2025-11-12 14:41:15 | feature_search | INFO |    • color_hist + corner_edge + edge_hist + hog + lbp + sift -> 0.7974 ± 0.0150 (2626 维 + PCA(512))
+2025-11-12 14:41:29 | feature_search | INFO |    • color_hist + glcm + hog + hu_moments + lbp + sift -> 0.7984 ± 0.0117 (2590 维 + PCA(512))
+2025-11-12 14:41:43 | feature_search | INFO |    • color_hist + edge_hist + glcm + hog + lbp + sift -> 0.7993 ± 0.0146 (2625 维 + PCA(512))
+2025-11-12 14:41:57 | feature_search | INFO |    • color_hist + color_moments + edge_hist + hog + lbp + sift -> 0.7983 ± 0.0150 (2628 维 + PCA(512))
+2025-11-12 14:42:11 | feature_search | INFO |    • color_hist + edge_hist + hog + hu_moments + lbp + sift -> 0.7985 ± 0.0138 (2626 维 + PCA(512))
+2025-11-12 14:42:11 | feature_search | INFO |    ✅ 保留 top 5 个候选
+2025-11-12 14:42:11 | feature_search | INFO |       1. 0.8004 ± 0.0121 | color_hist + gabor + glcm + hog + lbp + sift
+2025-11-12 14:42:11 | feature_search | INFO |       2. 0.8000 ± 0.0117 | color_hist + color_moments + gabor + hog + lbp + sift
+2025-11-12 14:42:11 | feature_search | INFO |       3. 0.7999 ± 0.0123 | color_hist + color_moments + glcm + hog + lbp + sift
+2025-11-12 14:42:11 | feature_search | INFO |       4. 0.7998 ± 0.0136 | color_hist + edge_hist + gabor + hog + lbp + sift
+2025-11-12 14:42:11 | feature_search | INFO |       5. 0.7994 ± 0.0115 | color_hist + gabor + hog + hu_moments + lbp + sift
+2025-11-12 14:42:11 | feature_search | INFO | 
+2025-11-12 14:42:11 | feature_search | INFO | 📊 第 7 步: 扩展束 (当前束大小: 5)
+2025-11-12 14:42:25 | feature_search | INFO |    • color_hist + color_moments + gabor + glcm + hog + lbp + sift -> 0.8011 ± 0.0103 (2656 维 + PCA(512))
+2025-11-12 14:42:39 | feature_search | INFO |    • color_hist + gabor + glcm + hog + hu_moments + lbp + sift -> 0.7994 ± 0.0126 (2654 维 + PCA(512))
+2025-11-12 14:42:53 | feature_search | INFO |    • color_hist + edge_hist + gabor + glcm + hog + lbp + sift -> 0.7996 ± 0.0113 (2689 维 + PCA(512))
+2025-11-12 14:43:07 | feature_search | INFO |    • color_hist + corner_edge + gabor + glcm + hog + lbp + sift -> 0.7993 ± 0.0117 (2654 维 + PCA(512))
+2025-11-12 14:43:21 | feature_search | INFO |    • color_hist + color_moments + gabor + hog + hu_moments + lbp + sift -> 0.7991 ± 0.0114 (2657 维 + PCA(512))
+2025-11-12 14:43:35 | feature_search | INFO |    • color_hist + color_moments + edge_hist + gabor + hog + lbp + sift -> 0.8011 ± 0.0118 (2692 维 + PCA(512))
+2025-11-12 14:43:50 | feature_search | INFO |    • color_hist + color_moments + corner_edge + gabor + hog + lbp + sift -> 0.7967 ± 0.0114 (2657 维 + PCA(512))
+2025-11-12 14:44:04 | feature_search | INFO |    • color_hist + color_moments + glcm + hog + hu_moments + lbp + sift -> 0.8008 ± 0.0136 (2599 维 + PCA(512))
+2025-11-12 14:44:18 | feature_search | INFO |    • color_hist + color_moments + edge_hist + glcm + hog + lbp + sift -> 0.8006 ± 0.0125 (2634 维 + PCA(512))
+2025-11-12 14:44:32 | feature_search | INFO |    • color_hist + color_moments + corner_edge + glcm + hog + lbp + sift -> 0.7965 ± 0.0121 (2599 维 + PCA(512))
+2025-11-12 14:44:46 | feature_search | INFO |    • color_hist + edge_hist + gabor + hog + hu_moments + lbp + sift -> 0.7990 ± 0.0123 (2690 维 + PCA(512))
+2025-11-12 14:45:00 | feature_search | INFO |    • color_hist + corner_edge + edge_hist + gabor + hog + lbp + sift -> 0.7991 ± 0.0106 (2690 维 + PCA(512))
+2025-11-12 14:45:14 | feature_search | INFO |    • color_hist + corner_edge + gabor + hog + hu_moments + lbp + sift -> 0.7991 ± 0.0124 (2655 维 + PCA(512))
+2025-11-12 14:45:14 | feature_search | INFO |    ✅ 保留 top 5 个候选
+2025-11-12 14:45:14 | feature_search | INFO |       1. 0.8011 ± 0.0103 | color_hist + color_moments + gabor + glcm + hog + lbp + sift
+2025-11-12 14:45:14 | feature_search | INFO |       2. 0.8011 ± 0.0118 | color_hist + color_moments + edge_hist + gabor + hog + lbp + sift
+2025-11-12 14:45:14 | feature_search | INFO |       3. 0.8008 ± 0.0136 | color_hist + color_moments + glcm + hog + hu_moments + lbp + sift
+2025-11-12 14:45:14 | feature_search | INFO |       4. 0.8006 ± 0.0125 | color_hist + color_moments + edge_hist + glcm + hog + lbp + sift
+2025-11-12 14:45:14 | feature_search | INFO |       5. 0.7996 ± 0.0113 | color_hist + edge_hist + gabor + glcm + hog + lbp + sift
+2025-11-12 14:45:14 | feature_search | INFO | 
+2025-11-12 14:45:14 | feature_search | INFO | 📊 第 8 步: 扩展束 (当前束大小: 5)
+2025-11-12 14:45:28 | feature_search | INFO |    • color_hist + color_moments + gabor + glcm + hog + hu_moments + lbp + sift -> 0.8000 ± 0.0087 (2663 维 + PCA(512))
+2025-11-12 14:45:42 | feature_search | INFO |    • color_hist + color_moments + edge_hist + gabor + glcm + hog + lbp + sift -> 0.7999 ± 0.0114 (2698 维 + PCA(512))
+2025-11-12 14:45:56 | feature_search | INFO |    • color_hist + color_moments + corner_edge + gabor + glcm + hog + lbp + sift -> 0.7974 ± 0.0104 (2663 维 + PCA(512))
+2025-11-12 14:46:10 | feature_search | INFO |    • color_hist + color_moments + edge_hist + gabor + hog + hu_moments + lbp + sift -> 0.8001 ± 0.0113 (2699 维 + PCA(512))
+2025-11-12 14:46:24 | feature_search | INFO |    • color_hist + color_moments + corner_edge + edge_hist + gabor + hog + lbp + sift -> 0.7995 ± 0.0119 (2699 维 + PCA(512))
+2025-11-12 14:46:38 | feature_search | INFO |    • color_hist + color_moments + edge_hist + glcm + hog + hu_moments + lbp + sift -> 0.7995 ± 0.0141 (2641 维 + PCA(512))
+2025-11-12 14:46:52 | feature_search | INFO |    • color_hist + color_moments + corner_edge + glcm + hog + hu_moments + lbp + sift -> 0.7976 ± 0.0152 (2606 维 + PCA(512))
+2025-11-12 14:47:06 | feature_search | INFO |    • color_hist + color_moments + corner_edge + edge_hist + glcm + hog + lbp + sift -> 0.7993 ± 0.0131 (2641 维 + PCA(512))
+2025-11-12 14:47:20 | feature_search | INFO |    • color_hist + edge_hist + gabor + glcm + hog + hu_moments + lbp + sift -> 0.7999 ± 0.0117 (2696 维 + PCA(512))
+2025-11-12 14:47:34 | feature_search | INFO |    • color_hist + corner_edge + edge_hist + gabor + glcm + hog + lbp + sift -> 0.8014 ± 0.0108 (2696 维 + PCA(512))
+2025-11-12 14:47:34 | feature_search | INFO |    ✅ 保留 top 5 个候选
+2025-11-12 14:47:34 | feature_search | INFO |       1. 0.8014 ± 0.0108 | color_hist + corner_edge + edge_hist + gabor + glcm + hog + lbp + sift
+2025-11-12 14:47:34 | feature_search | INFO |       2. 0.8001 ± 0.0113 | color_hist + color_moments + edge_hist + gabor + hog + hu_moments + lbp + sift
+2025-11-12 14:47:34 | feature_search | INFO |       3. 0.8000 ± 0.0087 | color_hist + color_moments + gabor + glcm + hog + hu_moments + lbp + sift
+2025-11-12 14:47:34 | feature_search | INFO |       4. 0.7999 ± 0.0114 | color_hist + color_moments + edge_hist + gabor + glcm + hog + lbp + sift
+2025-11-12 14:47:34 | feature_search | INFO |       5. 0.7999 ± 0.0117 | color_hist + edge_hist + gabor + glcm + hog + hu_moments + lbp + sift
+2025-11-12 14:47:34 | feature_search | INFO | 
+2025-11-12 14:47:34 | feature_search | INFO | ⭐ 束搜索最佳组合: color_hist + corner_edge + edge_hist + gabor + glcm + hog + lbp + sift
+2025-11-12 14:47:34 | feature_search | INFO |    得分: 0.8014 ± 0.0108
+2025-11-12 14:47:34 | feature_search | INFO |    维度: 2696 (PCA -> 512)
+2025-11-12 14:47:34 | feature_search | INFO | 📝 搜索结果已保存: runs/feature_search/search_results.json
+2025-11-12 14:47:34 | feature_search | INFO | ✨ 最佳组合: color_hist + corner_edge + edge_hist + gabor + glcm + hog + lbp + sift
+2025-11-12 14:47:34 | feature_search | INFO | 🔄 分别在 train/val/test 上提取并保存最佳特征组合...
+2025-11-12 14:47:34 | feature_search | INFO |    [train] 数据集大小: 8000 张图像
+2025-11-12 14:47:34 | feature_search | INFO |    [train] 🔧 提取特征: color_hist
+2025-11-12 14:47:35 | feature_search | INFO |       [train] ✓ 维度 512 | 样本 8000
+2025-11-12 14:47:35 | feature_search | INFO |    [train] 🔧 提取特征: corner_edge
+2025-11-12 14:47:39 | feature_search | INFO |       [train] ✓ 维度 7 | 样本 8000
+2025-11-12 14:47:39 | feature_search | INFO |    [train] 🔧 提取特征: edge_hist
+2025-11-12 14:47:45 | feature_search | INFO |       [train] ✓ 维度 42 | 样本 8000
+2025-11-12 14:47:45 | feature_search | INFO |    [train] 🔧 提取特征: gabor
+2025-11-12 14:48:44 | feature_search | INFO |       [train] ✓ 维度 64 | 样本 8000
+2025-11-12 14:48:44 | feature_search | INFO |    [train] 🔧 提取特征: glcm
+2025-11-12 14:49:54 | feature_search | INFO |       [train] ✓ 维度 6 | 样本 8000
+2025-11-12 14:49:54 | feature_search | INFO |    [train] 🔧 提取特征: hog
+2025-11-12 14:50:22 | feature_search | INFO |       [train] ✓ 维度 1764 | 样本 8000
+2025-11-12 14:50:22 | feature_search | INFO |    [train] 🔧 提取特征: lbp
+2025-11-12 14:50:24 | feature_search | INFO |       [train] ✓ 维度 10 | 样本 8000
+2025-11-12 14:50:24 | feature_search | INFO |    [train] 🔧 提取特征: sift
+2025-11-12 14:50:31 | feature_search | INFO |       [train] ✓ 维度 291 | 样本 8000
+2025-11-12 14:50:31 | feature_search | INFO |    [train] ✅ 特征提取完成: 8000 样本
+2025-11-12 14:50:41 | feature_search | INFO |    [train] 🔧 应用PCA: 2696 -> 512 维
+2025-11-12 14:50:41 | feature_search | INFO | 💾 [train] 特征已保存: /sda1_mount/lxy/Cat_Dog_Classification/features/train_features.joblib
+2025-11-12 14:50:41 | feature_search | INFO |    [val] 数据集大小: 1000 张图像
+2025-11-12 14:50:41 | feature_search | INFO |    [val] 🔧 提取特征: color_hist
+2025-11-12 14:50:41 | feature_search | INFO |       [val] ✓ 维度 512 | 样本 1000
+2025-11-12 14:50:41 | feature_search | INFO |    [val] 🔧 提取特征: corner_edge
+2025-11-12 14:50:41 | feature_search | INFO |       [val] ✓ 维度 7 | 样本 1000
+2025-11-12 14:50:41 | feature_search | INFO |    [val] 🔧 提取特征: edge_hist
+2025-11-12 14:50:42 | feature_search | INFO |       [val] ✓ 维度 42 | 样本 1000
+2025-11-12 14:50:42 | feature_search | INFO |    [val] 🔧 提取特征: gabor
+2025-11-12 14:50:50 | feature_search | INFO |       [val] ✓ 维度 64 | 样本 1000
+2025-11-12 14:50:50 | feature_search | INFO |    [val] 🔧 提取特征: glcm
+2025-11-12 14:50:59 | feature_search | INFO |       [val] ✓ 维度 6 | 样本 1000
+2025-11-12 14:50:59 | feature_search | INFO |    [val] 🔧 提取特征: hog
+2025-11-12 14:51:02 | feature_search | INFO |       [val] ✓ 维度 1764 | 样本 1000
+2025-11-12 14:51:02 | feature_search | INFO |    [val] 🔧 提取特征: lbp
+2025-11-12 14:51:02 | feature_search | INFO |       [val] ✓ 维度 10 | 样本 1000
+2025-11-12 14:51:02 | feature_search | INFO |    [val] 🔧 提取特征: sift
+2025-11-12 14:51:03 | feature_search | INFO |       [val] ✓ 维度 291 | 样本 1000
+2025-11-12 14:51:03 | feature_search | INFO |    [val] ✅ 特征提取完成: 1000 样本
+2025-11-12 14:51:03 | feature_search | INFO |    [val] 🔧 应用PCA: 2696 -> 512 维
+2025-11-12 14:51:03 | feature_search | INFO | 💾 [val] 特征已保存: /sda1_mount/lxy/Cat_Dog_Classification/features/val_features.joblib
+2025-11-12 14:51:03 | feature_search | INFO |    [test] 数据集大小: 1000 张图像
+2025-11-12 14:51:03 | feature_search | INFO |    [test] 🔧 提取特征: color_hist
+2025-11-12 14:51:04 | feature_search | INFO |       [test] ✓ 维度 512 | 样本 1000
+2025-11-12 14:51:04 | feature_search | INFO |    [test] 🔧 提取特征: corner_edge
+2025-11-12 14:51:04 | feature_search | INFO |       [test] ✓ 维度 7 | 样本 1000
+2025-11-12 14:51:04 | feature_search | INFO |    [test] 🔧 提取特征: edge_hist
+2025-11-12 14:51:05 | feature_search | INFO |       [test] ✓ 维度 42 | 样本 1000
+2025-11-12 14:51:05 | feature_search | INFO |    [test] 🔧 提取特征: gabor
+2025-11-12 14:51:13 | feature_search | INFO |       [test] ✓ 维度 64 | 样本 1000
+2025-11-12 14:51:13 | feature_search | INFO |    [test] 🔧 提取特征: glcm
+2025-11-12 14:51:21 | feature_search | INFO |       [test] ✓ 维度 6 | 样本 1000
+2025-11-12 14:51:21 | feature_search | INFO |    [test] 🔧 提取特征: hog
+2025-11-12 14:51:25 | feature_search | INFO |       [test] ✓ 维度 1764 | 样本 1000
+2025-11-12 14:51:25 | feature_search | INFO |    [test] 🔧 提取特征: lbp
+2025-11-12 14:51:25 | feature_search | INFO |       [test] ✓ 维度 10 | 样本 1000
+2025-11-12 14:51:25 | feature_search | INFO |    [test] 🔧 提取特征: sift
+2025-11-12 14:51:26 | feature_search | INFO |       [test] ✓ 维度 291 | 样本 1000
+2025-11-12 14:51:26 | feature_search | INFO |    [test] ✅ 特征提取完成: 1000 样本
+2025-11-12 14:51:26 | feature_search | INFO |    [test] 🔧 应用PCA: 2696 -> 512 维
+2025-11-12 14:51:26 | feature_search | INFO | 💾 [test] 特征已保存: /sda1_mount/lxy/Cat_Dog_Classification/features/test_features.joblib
+2025-11-12 14:51:26 | feature_search | INFO | 
+2025-11-12 14:51:26 | feature_search | INFO | ============================================================
+2025-11-12 14:51:26 | feature_search | INFO | 搜索完成
+2025-11-12 14:51:26 | feature_search | INFO | ============================================================
+2025-11-12 14:51:26 | feature_search | INFO | 最佳组合: color_hist + corner_edge + edge_hist + gabor + glcm + hog + lbp + sift
+2025-11-12 14:51:26 | feature_search | INFO | 最佳得分: 0.8014 ± 0.0108
+2025-11-12 14:51:26 | feature_search | INFO | 结果目录: runs/feature_search
+2025-11-12 14:51:26 | feature_search | INFO | 搜索结果: runs/feature_search/search_results.json
+2025-11-12 14:51:26 | feature_search | INFO | 最佳特征: {'train': '/sda1_mount/lxy/Cat_Dog_Classification/features/train_features.joblib', 'val': '/sda1_mount/lxy/Cat_Dog_Classification/features/val_features.joblib', 'test': '/sda1_mount/lxy/Cat_Dog_Classification/features/test_features.joblib'}
+2025-11-12 14:51:26 | feature_search | INFO | ============================================================

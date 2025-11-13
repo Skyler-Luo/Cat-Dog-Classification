@@ -1,0 +1,14 @@
+/logs
+dataset/*
+_DS_Store
+/.vscode
+*.jpg
+!img/*.jpg
+.cursorrules
+*.h5
+*.png
+*.csv
+*.pt
+*.pth
+*.pkl
+__pycache__

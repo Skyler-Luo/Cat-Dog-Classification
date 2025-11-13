@@ -1,0 +1,62 @@
+{
+  "agreement_matrix": [
+    [
+      0.0,
+      0.6361629989764586,
+      0.7220667039910422
+    ],
+    [
+      0.6361629989764586,
+      0.0,
+      0.6574244731148329
+    ],
+    [
+      0.7220667039910422,
+      0.6574244731148329,
+      0.0
+    ]
+  ],
+  "model_names": [
+    "逻辑回归",
+    "随机森林",
+    "SVM"
+  ],
+  "n_agree": 754,
+  "n_disagree": 246,
+  "model_errors": {
+    "逻辑回归": {
+      "accuracy": 0.77,
+      "n_errors": 230
+    },
+    "随机森林": {
+      "accuracy": 0.748,
+      "n_errors": 252
+    },
+    "SVM": {
+      "accuracy": 0.815,
+      "n_errors": 185
+    }
+  },
+  "error_overlap": {
+    "逻辑回归_vs_随机森林": {
+      "both_wrong": 150,
+      "only1": 80,
+      "only2": 102,
+      "overlap_ratio": 0.45180722891566266
+    },
+    "逻辑回归_vs_SVM": {
+      "both_wrong": 138,
+      "only1": 92,
+      "only2": 47,
+      "overlap_ratio": 0.4981949458483754
+    },
+    "随机森林_vs_SVM": {
+      "both_wrong": 133,
+      "only1": 119,
+      "only2": 52,
+      "overlap_ratio": 0.4375
+    }
+  },
+  "majority_vote_accuracy": 0.791,
+  "best_single_accuracy": 0.815
+}

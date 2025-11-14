@@ -163,10 +163,22 @@ def load_data(data_dir, train_dir="train", val_dir="val", test_dir="test",
             test_loader = None
     
     # 生成统计信息
+    def _dataset_length(dataset):
+        if dataset is None:
+            return 0
+        length_fn = getattr(dataset, "__len__", None)
+        if callable(length_fn):
+            return length_fn()
+        return 0
+
+    train_dataset = getattr(train_loader, "dataset", None)
+    val_dataset = getattr(val_loader, "dataset", None)
+    test_dataset = getattr(test_loader, "dataset", None) if test_loader is not None else None
+
     stats = {
-        'n_train': len(train_loader.dataset),
-        'n_val': len(val_loader.dataset),
-        'n_test': len(test_loader.dataset) if test_loader is not None else 0,
+        'n_train': _dataset_length(train_dataset),
+        'n_val': _dataset_length(val_dataset),
+        'n_test': _dataset_length(test_dataset),
         'num_classes': 2,
         'class_names': ['cats', 'dogs'],
     }

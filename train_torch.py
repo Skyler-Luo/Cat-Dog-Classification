@@ -6,6 +6,8 @@
 
 import argparse
 import time
+from datetime import datetime
+from pathlib import Path
 
 from src.models.cnn import create_CatDogCNNv1, create_CatDogCNNv2
 from src.models.resnet import create_resnet18, create_resnet50, PretrainedResNet
@@ -30,7 +32,7 @@ def parse_args():
     data_group.add_argument("--test-dirname", type=str, default="test", help="测试集子目录名")
 
     train_group = parser.add_argument_group("训练配置")
-    train_group.add_argument("--arch", type=str, choices=ARCH_CHOICES, default="cnn_v2", help="模型架构 (cnn_v1/cnn_v2/resnet18/resnet34/resnet50)")
+    train_group.add_argument("--arch", type=str, choices=ARCH_CHOICES, default="cnn_v1", help="模型架构 (cnn_v1/cnn_v2/resnet18/resnet34/resnet50)")
     train_group.add_argument("--image-size", type=int, default=224, help="输入图像尺寸")
     train_group.add_argument("--batch-size", type=int, default=512, help="批次大小")
     train_group.add_argument("--epochs", type=int, default=120, help="训练轮数")
@@ -38,73 +40,96 @@ def parse_args():
     train_group.add_argument("--weight-decay", type=float, default=1e-4, help="权重衰减")
     train_group.add_argument("--optimizer", type=str, choices=["adam", "sgd"], default="adam", help="优化器类型")   
     train_group.add_argument("--momentum", type=float, default=0.9, help="SGD 动量")
-    train_group.add_argument("--scheduler", type=str, choices=["none", "cosine", "step"], default="none", help="学习率调度器")
+    train_group.add_argument("--scheduler", type=str, choices=["none", "cosine", "step"], default="cosine", help="学习率调度器")
     train_group.add_argument("--step-size", type=int, default=10, help="StepLR 步长")
     train_group.add_argument("--gamma", type=float, default=0.1, help="学习率衰减因子")
     train_group.add_argument("--dropout", type=float, default=0.0, help="分类头 Dropout 概率")
     train_group.add_argument("--normalize-imagenet", action="store_true", help="使用 ImageNet 标准化")
+    train_group.add_argument("--no-train-augment", dest="train_augment", action="store_false", help="禁用训练数据增强（默认: 启用）")
     train_group.add_argument("--no-amp", dest="amp", action="store_false", help="禁用混合精度")
     train_group.add_argument("--early-stop-patience", type=int, default=10, help="早停耐心值")
+    train_group.add_argument("--early-stop-metric", type=str, default="accuracy", choices=["accuracy", "f1", "precision", "recall", "loss"], help="早停评估指标")
     train_group.add_argument("--seed", type=int, default=42, help="随机种子")
 
     resnet_group = parser.add_argument_group("ResNet 专属配置")
-    resnet_group.add_argument("--freeze-backbone", dest="freeze_backbone", action="store_true", help="冻结 ResNet 主干 (仅训练分类头)")
-    resnet_group.add_argument("--no-freeze-backbone", dest="freeze_backbone", action="store_false", help="解冻 ResNet 主干")
-    resnet_group.add_argument("--no-resnet-pretrained", dest="resnet_pretrained", action="store_false", help="禁用 ResNet ImageNet 预训练权重")
-    resnet_group.add_argument("--resnet-pretrained", dest="resnet_pretrained", action="store_true", help="启用 ResNet ImageNet 预训练权重")
+    resnet_group.add_argument("--no-freeze-backbone", dest="freeze_backbone", action="store_false", help="解冻 ResNet 主干（默认: 冻结）")
+    resnet_group.add_argument("--no-resnet-pretrained", dest="resnet_pretrained", action="store_false", help="禁用 ResNet ImageNet 预训练权重（默认: 启用）")
 
     system_group = parser.add_argument_group("系统配置")
     system_group.add_argument("--num-workers", type=int, default=16, help="DataLoader 工作进程数")
-    system_group.add_argument("--log-dir", type=str, default="runs/torch_cnn", help="TensorBoard 日志目录")
-    system_group.add_argument("--ckpt-dir", type=str, default="runs/torch_cnn", help="模型保存目录")
-    system_group.add_argument("--log-output-dir", type=str, default="logs/torch", help="文本日志目录")
-    system_group.add_argument("--log-level", type=str, default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"], help="日志级别 (保留参数，便于兼容)")
+    system_group.add_argument("--run-dir", type=str, default=None, help="运行目录（默认: runs/torch_{arch}_{timestamp}）")
+    system_group.add_argument("--log-level", type=str, default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"], help="日志级别")
 
-    parser.set_defaults(amp=True, resnet_pretrained=True, freeze_backbone=True)
+    parser.set_defaults(amp=True, train_augment=True, resnet_pretrained=True, freeze_backbone=True)
 
     return parser.parse_args()
 
 
-def _build_model_factory(args):
-    """根据参数构建模型工厂函数。"""
+def _build_model_factory(cfg):
+    """根据配置构建模型工厂函数。
+    
+    参数:
+        cfg: TrainConfig 配置对象
+        
+    返回:
+        模型构建函数
+    """
 
-    arch = args.arch
+    arch = cfg.model_version
 
     def build_model(device):
         if arch == "cnn_v1":
-            model = create_CatDogCNNv1(num_classes=1, in_channels=3, dropout_p=args.dropout).to(device)
+            model = create_CatDogCNNv1(num_classes=1, in_channels=3, dropout_p=cfg.dropout).to(device)
             return model, "CatDogCNNv1"
         if arch == "cnn_v2":
-            model = create_CatDogCNNv2(num_classes=1, in_channels=3, dropout_p=args.dropout).to(device)
+            model = create_CatDogCNNv2(num_classes=1, in_channels=3, dropout_p=cfg.dropout).to(device)
             return model, "CatDogCNNv2"
         if arch == "resnet18":
             model = create_resnet18(
                 num_classes=1,
-                pretrained=args.resnet_pretrained,
-                freeze_backbone=args.freeze_backbone,
-                dropout_p=args.dropout,
+                pretrained=cfg.resnet_pretrained,
+                freeze_backbone=cfg.freeze_backbone,
+                dropout_p=cfg.dropout,
             ).to(device)
             return model, "ResNet18"
         if arch == "resnet34":
             model = PretrainedResNet(
                 model_name="resnet34",
                 num_classes=1,
-                pretrained=args.resnet_pretrained,
-                freeze_backbone=args.freeze_backbone,
-                dropout_p=args.dropout,
+                pretrained=cfg.resnet_pretrained,
+                freeze_backbone=cfg.freeze_backbone,
+                dropout_p=cfg.dropout,
             ).to(device)
             return model, "ResNet34"
         if arch == "resnet50":
             model = create_resnet50(
                 num_classes=1,
-                pretrained=args.resnet_pretrained,
-                freeze_backbone=args.freeze_backbone,
-                dropout_p=args.dropout,
+                pretrained=cfg.resnet_pretrained,
+                freeze_backbone=cfg.freeze_backbone,
+                dropout_p=cfg.dropout,
             ).to(device)
             return model, "ResNet50"
         raise ValueError("不支持的 arch: {}".format(arch))
 
     return build_model
+
+
+def _default_run_dir(arch, timestamp=None):
+    """生成带时间戳的默认运行目录
+    
+    参数:
+        arch: 模型架构名称（如 "cnn_v2", "resnet18"）
+        timestamp: 时间戳字符串（格式: YYYYMMDD-HHMMSS），如果为None则自动生成
+        
+    返回:
+        str: 运行目录路径，格式为 runs/torch_{arch}_{timestamp}
+    """
+    if timestamp is None:
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    
+    arch_clean = arch.replace("_", "-")
+    base_dir = Path("runs") / "torch_{}_{}".format(arch_clean, timestamp)
+    return str(base_dir)
 
 
 def main():
@@ -115,10 +140,18 @@ def main():
 
     start_time = time.time()
     experiment_name = args.arch.replace("_", "-")
+    
+    # 生成时间戳和运行目录
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    if not args.run_dir:
+        args.run_dir = _default_run_dir(args.arch, timestamp)
+    
+    run_dir = Path(args.run_dir)
+    run_dir.mkdir(parents=True, exist_ok=True)
 
     logger = Logger(
         name=experiment_name,
-        log_dir=args.log_output_dir,
+        log_dir=str(run_dir),
         filename="{}.log".format(experiment_name),
         level=args.log_level,
     )
@@ -141,22 +174,20 @@ def main():
         model_version=args.arch,
         dropout=args.dropout,
         normalize_imagenet=args.normalize_imagenet,
+        train_augment=args.train_augment,
         amp=args.amp,
         early_stop_patience=args.early_stop_patience,
+        early_stop_metric=args.early_stop_metric,
+        resnet_pretrained=args.resnet_pretrained,
+        freeze_backbone=args.freeze_backbone,
         num_workers=args.num_workers,
         seed=args.seed,
-        log_dir=args.log_dir,
-        ckpt_dir=args.ckpt_dir,
+        log_dir=str(run_dir),  # TensorBoard 日志目录
+        ckpt_dir=str(run_dir),  # 模型保存目录
     )
 
     config_info = cfg.to_dict()
-    config_info.update(
-        {
-            "arch": args.arch,
-            "freeze_backbone": args.freeze_backbone,
-            "resnet_pretrained": args.resnet_pretrained,
-        }
-    )
+    config_info["arch"] = args.arch
 
     logger.block(
         "开始训练",
@@ -169,7 +200,7 @@ def main():
     )
     logger.info("启动 {} 训练流程".format(experiment_name.upper()))
 
-    build_model = _build_model_factory(args)
+    build_model = _build_model_factory(cfg)
     title_map = {
         "cnn_v1": "猫狗分类 - CNN v1 训练",
         "cnn_v2": "猫狗分类 - CNN v2 训练",
@@ -179,7 +210,7 @@ def main():
     }
     title = title_map.get(args.arch, "猫狗分类 - PyTorch 训练")
 
-    results = train_binary_classification(cfg, build_model, title)
+    results = train_binary_classification(cfg, build_model, title, logger=logger)
 
     total_time = time.time() - start_time
     best_val = results.get("best_val", {})
@@ -191,7 +222,7 @@ def main():
         [
             "耗时: {}".format(Logger.format_duration(total_time)),
             "最佳准确率: {:.4f}".format(best_acc) if best_acc is not None else "最佳准确率: -",
-            "检查点目录: {}".format(ckpt_dir),
+            "运行目录: {}".format(run_dir),
         ],
     )
     logger.info("{} 训练流程完成".format(experiment_name.upper()))

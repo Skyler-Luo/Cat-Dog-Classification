@@ -52,9 +52,9 @@ def build_parser(default_model=None):
     )
     # 通用训练参数
     parser.add_argument('--data-dir', type=str, default='features', help='特征文件目录')
-    parser.add_argument('--train-dirname', type=str, default='train', help='训练集子目录名')
-    parser.add_argument('--val-dirname', type=str, default='val', help='验证集子目录名')
-    parser.add_argument('--test-dirname', type=str, default='test', help='测试集子目录名')
+    parser.add_argument('--train-dirname', type=str, default='train', help='训练集名称')
+    parser.add_argument('--val-dirname', type=str, default='val', help='验证集名称')
+    parser.add_argument('--test-dirname', type=str, default='test', help='测试集名称')
     parser.add_argument('--n-jobs', type=int, default=16, help='并行线程数')
     parser.add_argument('--seed', type=int, default=42, help='随机种子')
     parser.add_argument('--cv-folds', type=int, default=5, help='交叉验证折数')

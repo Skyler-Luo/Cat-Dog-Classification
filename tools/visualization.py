@@ -575,3 +575,158 @@ def visualize_random_forest_results(results, model=None, feature_names=None, sav
             save_path=save_dir / "random_forest_importance.png"
         )
     return outputs
+
+
+def plot_torch_training_curves(train_history, val_history, learning_rates=None, save_dir=None):
+    """绘制 PyTorch 训练过程中的损失曲线、精度曲线等。
+    
+    参数:
+        train_history: 训练集历史记录字典，包含 loss, accuracy, precision, recall, f1 等键
+        val_history: 验证集历史记录字典，包含 loss, accuracy, precision, recall, f1 等键
+        learning_rates: 学习率历史列表（可选）
+        save_dir: 图像保存目录（可选）
+        
+    返回:
+        dict: 包含生成图像路径的字典
+    """
+    if save_dir is None:
+        save_dir = Path(".")
+    save_dir = Path(save_dir)
+    save_dir.mkdir(parents=True, exist_ok=True)
+    
+    outputs = {}
+    epochs = np.arange(1, len(train_history.get("loss", [])) + 1)
+    
+    # 1. 损失曲线
+    if "loss" in train_history and "loss" in val_history:
+        plt.figure(figsize=(8, 5))
+        plt.plot(epochs, train_history["loss"], label="训练损失", color="#4c78a8", linewidth=2)
+        plt.plot(epochs, val_history["loss"], label="验证损失", color="#f58518", linewidth=2)
+        plt.xlabel("训练轮次")
+        plt.ylabel("损失")
+        plt.title("训练/验证损失曲线")
+        plt.legend()
+        plt.grid(ls='--', alpha=0.3)
+        plt.tight_layout()
+        loss_path = save_dir / "loss_curve.png"
+        plt.savefig(loss_path, dpi=200)
+        plt.close()
+        outputs['loss_curve'] = loss_path
+    
+    # 2. 准确率曲线
+    if "accuracy" in train_history and "accuracy" in val_history:
+        plt.figure(figsize=(8, 5))
+        plt.plot(epochs, np.array(train_history["accuracy"]) * 100, label="训练准确率", color="#4c78a8", linewidth=2)
+        plt.plot(epochs, np.array(val_history["accuracy"]) * 100, label="验证准确率", color="#f58518", linewidth=2)
+        plt.xlabel("训练轮次")
+        plt.ylabel("准确率 (%)")
+        plt.title("训练/验证准确率曲线")
+        plt.legend()
+        plt.grid(ls='--', alpha=0.3)
+        plt.tight_layout()
+        acc_path = save_dir / "accuracy_curve.png"
+        plt.savefig(acc_path, dpi=200)
+        plt.close()
+        outputs['accuracy_curve'] = acc_path
+    
+    # 3. F1 分数曲线
+    if "f1" in train_history and "f1" in val_history:
+        plt.figure(figsize=(8, 5))
+        plt.plot(epochs, train_history["f1"], label="训练 F1", color="#4c78a8", linewidth=2)
+        plt.plot(epochs, val_history["f1"], label="验证 F1", color="#f58518", linewidth=2)
+        plt.xlabel("训练轮次")
+        plt.ylabel("F1 分数")
+        plt.title("训练/验证 F1 分数曲线")
+        plt.legend()
+        plt.grid(ls='--', alpha=0.3)
+        plt.tight_layout()
+        f1_path = save_dir / "f1_curve.png"
+        plt.savefig(f1_path, dpi=200)
+        plt.close()
+        outputs['f1_curve'] = f1_path
+    
+    # 4. 精确率和召回率曲线
+    if "precision" in train_history and "recall" in train_history:
+        plt.figure(figsize=(8, 5))
+        plt.plot(epochs, train_history["precision"], label="训练精确率", color="#4c78a8", linewidth=2, linestyle='-')
+        plt.plot(epochs, train_history["recall"], label="训练召回率", color="#4c78a8", linewidth=2, linestyle='--')
+        plt.plot(epochs, val_history.get("precision", []), label="验证精确率", color="#f58518", linewidth=2, linestyle='-')
+        plt.plot(epochs, val_history.get("recall", []), label="验证召回率", color="#f58518", linewidth=2, linestyle='--')
+        plt.xlabel("训练轮次")
+        plt.ylabel("分数")
+        plt.title("训练/验证精确率与召回率曲线")
+        plt.legend()
+        plt.grid(ls='--', alpha=0.3)
+        plt.tight_layout()
+        pr_path = save_dir / "precision_recall_curve.png"
+        plt.savefig(pr_path, dpi=200)
+        plt.close()
+        outputs['precision_recall_curve'] = pr_path
+    
+    # 5. 学习率曲线
+    if learning_rates is not None and len(learning_rates) > 0:
+        plt.figure(figsize=(8, 5))
+        plt.plot(epochs, learning_rates, label="学习率", color="#54a24b", linewidth=2)
+        plt.xlabel("训练轮次")
+        plt.ylabel("学习率")
+        plt.title("学习率变化曲线")
+        plt.legend()
+        plt.grid(ls='--', alpha=0.3)
+        plt.yscale('log')
+        plt.tight_layout()
+        lr_path = save_dir / "learning_rate_curve.png"
+        plt.savefig(lr_path, dpi=200)
+        plt.close()
+        outputs['learning_rate_curve'] = lr_path
+    
+    # 6. 综合指标对比图（子图形式）
+    if len(outputs) > 0:
+        fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+        
+        # 损失
+        if "loss" in train_history:
+            axes[0, 0].plot(epochs, train_history["loss"], label="训练", color="#4c78a8", linewidth=1.5)
+            axes[0, 0].plot(epochs, val_history["loss"], label="验证", color="#f58518", linewidth=1.5)
+            axes[0, 0].set_xlabel("训练轮次")
+            axes[0, 0].set_ylabel("损失")
+            axes[0, 0].set_title("损失曲线")
+            axes[0, 0].legend()
+            axes[0, 0].grid(ls='--', alpha=0.3)
+        
+        # 准确率
+        if "accuracy" in train_history:
+            axes[0, 1].plot(epochs, np.array(train_history["accuracy"]) * 100, label="训练", color="#4c78a8", linewidth=1.5)
+            axes[0, 1].plot(epochs, np.array(val_history["accuracy"]) * 100, label="验证", color="#f58518", linewidth=1.5)
+            axes[0, 1].set_xlabel("训练轮次")
+            axes[0, 1].set_ylabel("准确率 (%)")
+            axes[0, 1].set_title("准确率曲线")
+            axes[0, 1].legend()
+            axes[0, 1].grid(ls='--', alpha=0.3)
+        
+        # F1
+        if "f1" in train_history:
+            axes[1, 0].plot(epochs, train_history["f1"], label="训练", color="#4c78a8", linewidth=1.5)
+            axes[1, 0].plot(epochs, val_history["f1"], label="验证", color="#f58518", linewidth=1.5)
+            axes[1, 0].set_xlabel("训练轮次")
+            axes[1, 0].set_ylabel("F1 分数")
+            axes[1, 0].set_title("F1 分数曲线")
+            axes[1, 0].legend()
+            axes[1, 0].grid(ls='--', alpha=0.3)
+        
+        # 学习率
+        if learning_rates is not None and len(learning_rates) > 0:
+            axes[1, 1].plot(epochs, learning_rates, label="学习率", color="#54a24b", linewidth=1.5)
+            axes[1, 1].set_xlabel("训练轮次")
+            axes[1, 1].set_ylabel("学习率")
+            axes[1, 1].set_title("学习率变化")
+            axes[1, 1].legend()
+            axes[1, 1].grid(ls='--', alpha=0.3)
+            axes[1, 1].set_yscale('log')
+        
+        plt.tight_layout()
+        summary_path = save_dir / "training_summary.png"
+        plt.savefig(summary_path, dpi=200)
+        plt.close()
+        outputs['training_summary'] = summary_path
+    
+    return outputs

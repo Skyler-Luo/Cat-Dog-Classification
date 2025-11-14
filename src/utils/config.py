@@ -62,8 +62,13 @@ class TrainConfig:
         model_version="v1",
         dropout=0.0,
         normalize_imagenet=False,
+        train_augment=True,
         amp=True,
         early_stop_patience=10,
+        early_stop_metric="accuracy",
+        # ResNet 专属配置
+        resnet_pretrained=True,
+        freeze_backbone=True,
         # 系统配置
         num_workers=4,
         seed=42,
@@ -91,8 +96,13 @@ class TrainConfig:
         self.model_version = model_version
         self.dropout = dropout
         self.normalize_imagenet = normalize_imagenet
+        self.train_augment = train_augment
         self.amp = amp
         self.early_stop_patience = early_stop_patience
+        self.early_stop_metric = early_stop_metric
+
+        self.resnet_pretrained = resnet_pretrained
+        self.freeze_backbone = freeze_backbone
 
         self.num_workers = num_workers
         self.seed = seed
@@ -118,8 +128,12 @@ class TrainConfig:
             "model_version": self.model_version,
             "dropout": self.dropout,
             "normalize_imagenet": self.normalize_imagenet,
+            "train_augment": self.train_augment,
             "amp": self.amp,
             "early_stop_patience": self.early_stop_patience,
+            "early_stop_metric": self.early_stop_metric,
+            "resnet_pretrained": self.resnet_pretrained,
+            "freeze_backbone": self.freeze_backbone,
             "num_workers": self.num_workers,
             "seed": self.seed,
             "log_dir": self.log_dir,

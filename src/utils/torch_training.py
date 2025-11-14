@@ -18,6 +18,9 @@ from src.data.data_utils import load_data
 from .logger import Logger
 from .config import TrainConfig
 
+from tools.visualization import plot_torch_training_curves
+
+
 
 __all__ = [
     "EarlyStopping",
@@ -269,30 +272,34 @@ def count_binary_labels(loader, device):
 
 
 def log_epoch_scalars(writer, epoch, train_metrics, val_metrics, current_lr):
-    all_metrics = {
-        "1_train_loss": train_metrics.get("loss", 0),
-        "2_val_loss": val_metrics.get("loss", 0),
-        "3_train_accuracy": train_metrics.get("accuracy", 0),
-        "4_val_accuracy": val_metrics.get("accuracy", 0),
-        "99_learning_rate": current_lr,
-    }
-    metric_names = ["precision", "recall", "f1"]
-    for i, metric_name in enumerate(metric_names, start=5):
-        if metric_name in train_metrics:
-            all_metrics["{}_train_{}".format(i, metric_name)] = train_metrics[metric_name]
-        if metric_name in val_metrics:
-            all_metrics["{}_val_{}".format(i + 3, metric_name)] = val_metrics[metric_name]
-    writer.add_scalars("Training_Summary", all_metrics, epoch)
+    """记录训练指标到 TensorBoard，使用 add_scalar 避免创建子目录。"""
+    # 使用统一的标签前缀，避免创建子目录
+    writer.add_scalar("Loss/Train", train_metrics.get("loss", 0), epoch)
+    writer.add_scalar("Loss/Val", val_metrics.get("loss", 0), epoch)
+    writer.add_scalar("Accuracy/Train", train_metrics.get("accuracy", 0), epoch)
+    writer.add_scalar("Accuracy/Val", val_metrics.get("accuracy", 0), epoch)
+    writer.add_scalar("Precision/Train", train_metrics.get("precision", 0), epoch)
+    writer.add_scalar("Precision/Val", val_metrics.get("precision", 0), epoch)
+    writer.add_scalar("Recall/Train", train_metrics.get("recall", 0), epoch)
+    writer.add_scalar("Recall/Val", val_metrics.get("recall", 0), epoch)
+    writer.add_scalar("F1/Train", train_metrics.get("f1", 0), epoch)
+    writer.add_scalar("F1/Val", val_metrics.get("f1", 0), epoch)
+    writer.add_scalar("LearningRate", current_lr, epoch)
 
 
-def train_binary_classification(cfg, build_model_fn, title):
+def train_binary_classification(cfg, build_model_fn, title, logger=None):
     set_global_seed(cfg.seed)
-    timestamp = time.strftime("%Y%m%d-%H%M%S")
-    tb_dir = Path(cfg.log_dir) / timestamp
-    ckpt_run_dir = Path(cfg.ckpt_dir) / timestamp
+    # 使用统一的运行目录（不再创建时间戳子目录）
+    run_dir = Path(cfg.ckpt_dir)
+    run_dir.mkdir(parents=True, exist_ok=True)
+    
+    # TensorBoard 日志保存在运行目录下的 events 子目录，使用单个事件文件
+    tb_dir = run_dir / "events"
     tb_dir.mkdir(parents=True, exist_ok=True)
-    ckpt_run_dir.mkdir(parents=True, exist_ok=True)
-    logger = Logger(name="catdog", log_dir=str(tb_dir))
+    
+    # 如果未提供 logger，则创建新的 logger
+    if logger is None:
+        logger = Logger(name="catdog", log_dir=str(run_dir))
 
     logger.block(title)
 
@@ -325,7 +332,7 @@ def train_binary_classification(cfg, build_model_fn, title):
         test_dir=cfg.test_dirname,
         size=cfg.image_size,
         batch_size=cfg.batch_size,
-        train_augment=True,
+        train_augment=cfg.train_augment,
         use_imagenet_norm=cfg.normalize_imagenet,
         num_workers=cfg.num_workers,
     )
@@ -358,6 +365,7 @@ def train_binary_classification(cfg, build_model_fn, title):
         "图像尺寸: {}x{}".format(cfg.image_size, cfg.image_size),
         "Dropout: {}".format(cfg.dropout),
         "标准化: {}".format("ImageNet" if cfg.normalize_imagenet else "默认[0,1]"),
+        "数据增强: {}".format("启用" if cfg.train_augment else "禁用"),
     ]
     logger.block("模型配置", model_info)
 
@@ -377,19 +385,27 @@ def train_binary_classification(cfg, build_model_fn, title):
         "权重衰减: {}".format(cfg.weight_decay),
         "学习率调度: {}".format(cfg.scheduler),
         "早停耐心值: {}".format(cfg.early_stop_patience),
+        "早停评估指标: {}".format(cfg.early_stop_metric),
         "工作进程数: {}".format(cfg.num_workers),
         "类别权重: cats={:.2f}, dogs={:.2f}".format(1.0, pos_weight.item() if pos_weight is not None else 1.0),
     ]
     logger.block("训练配置", train_info)
 
-    writer = SummaryWriter(log_dir=str(tb_dir))
-    ckpt_best_path = ckpt_run_dir / "best.pt"
-    ckpt_last_path = ckpt_run_dir / "last.pt"
-    with open(ckpt_run_dir / "config.json", "w", encoding="utf-8") as f:
+    # 使用固定的事件文件名，所有数据保存到 events 子目录下的单个文件中
+    # 通过设置 max_queue 和 flush_secs 来控制写入，确保数据集中在一个文件
+    writer = SummaryWriter(
+        log_dir=str(tb_dir),
+        filename_suffix="",
+        max_queue=10,
+        flush_secs=30,
+    )
+    ckpt_best_path = run_dir / "best.pt"
+    ckpt_last_path = run_dir / "last.pt"
+    with open(run_dir / "config.json", "w", encoding="utf-8") as f:
         json.dump(cfg.to_dict(), f, indent=2, ensure_ascii=False)
     logger.info("\nTensorBoard日志目录: {}".format(tb_dir))
-    logger.info("模型保存目录: {}".format(ckpt_run_dir))
-    logger.info("训练日志: {}".format(tb_dir / "train.log"))
+    logger.info("模型保存目录: {}".format(run_dir))
+    logger.info("训练日志: {}".format(run_dir / "{}.log".format(cfg.model_version)))
 
     try:
         dummy_input = torch.randn(1, 3, cfg.image_size, cfg.image_size).to(device)
@@ -398,9 +414,43 @@ def train_binary_classification(cfg, build_model_fn, title):
         logger.warning("无法记录模型结构: {}".format(exc))
 
     logger.block("开始训练")
-    early = EarlyStopping(patience=cfg.early_stop_patience, mode="max")
-    best_val = {"loss": float("inf"), "accuracy": 0.0, "epoch": 0}
+    # 根据评估指标确定早停模式
+    metric_mode_map = {
+        "accuracy": "max",
+        "f1": "max",
+        "precision": "max",
+        "recall": "max",
+        "loss": "min",
+    }
+    early_stop_mode = metric_mode_map.get(cfg.early_stop_metric, "max")
+    early = EarlyStopping(patience=cfg.early_stop_patience, mode=early_stop_mode)
+    # 初始化 best_val，包含所有可能的评估指标
+    best_val = {
+        "loss": float("inf"),
+        "accuracy": 0.0,
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "epoch": 0,
+    }
     train_start_time = time.time()
+    
+    # 收集训练历史数据
+    train_history = {
+        "loss": [],
+        "accuracy": [],
+        "precision": [],
+        "recall": [],
+        "f1": [],
+    }
+    val_history = {
+        "loss": [],
+        "accuracy": [],
+        "precision": [],
+        "recall": [],
+        "f1": [],
+    }
+    learning_rates = []
 
     for epoch in range(1, cfg.epochs + 1):
         epoch_start_time = time.time()
@@ -431,6 +481,21 @@ def train_binary_classification(cfg, build_model_fn, title):
         log_epoch_scalars(writer, epoch, train_metrics, val_metrics, current_lr)
         if epoch % 10 == 0 or epoch == 1:
             log_tensorboard_images(writer, model, val_loader, device, epoch, num_images=8)
+        
+        # 收集训练历史
+        train_history["loss"].append(train_metrics["loss"])
+        train_history["accuracy"].append(train_metrics["accuracy"])
+        train_history["precision"].append(train_metrics.get("precision", 0.0))
+        train_history["recall"].append(train_metrics.get("recall", 0.0))
+        train_history["f1"].append(train_metrics.get("f1", 0.0))
+        
+        val_history["loss"].append(val_metrics["loss"])
+        val_history["accuracy"].append(val_metrics["accuracy"])
+        val_history["precision"].append(val_metrics.get("precision", 0.0))
+        val_history["recall"].append(val_metrics.get("recall", 0.0))
+        val_history["f1"].append(val_metrics.get("f1", 0.0))
+        
+        learning_rates.append(current_lr)
 
         save_checkpoint(
             model,
@@ -442,12 +507,25 @@ def train_binary_classification(cfg, build_model_fn, title):
         )
 
         improved = False
-        if val_metrics["accuracy"] > best_val["accuracy"]:
+        # 根据配置的评估指标判断是否改善
+        metric_value = val_metrics.get(cfg.early_stop_metric, val_metrics.get("accuracy", 0.0))
+        best_metric_value = best_val.get(cfg.early_stop_metric, best_val.get("accuracy", 0.0))
+        
+        if cfg.early_stop_metric == "loss":
+            is_improved = metric_value < best_metric_value
+        else:
+            is_improved = metric_value > best_metric_value
+        
+        if is_improved:
             best_val = {
                 "loss": val_metrics["loss"],
                 "accuracy": val_metrics["accuracy"],
+                "f1": val_metrics.get("f1", 0.0),
+                "precision": val_metrics.get("precision", 0.0),
+                "recall": val_metrics.get("recall", 0.0),
                 "epoch": epoch,
             }
+            best_val[cfg.early_stop_metric] = metric_value
             save_checkpoint(
                 model,
                 optimizer,
@@ -492,8 +570,10 @@ def train_binary_classification(cfg, build_model_fn, title):
         )
         logger.info("   学习率: {:.6f} -> {:.6f}".format(current_lr, next_lr))
 
-        if early.step(val_metrics["accuracy"]):
-            logger.info("\n触发早停 (连续 {} 轮无改善)".format(cfg.early_stop_patience))
+        # 使用配置的评估指标进行早停判断
+        metric_value = val_metrics.get(cfg.early_stop_metric, val_metrics.get("accuracy", 0.0))
+        if early.step(metric_value):
+            logger.info("\n触发早停 (连续 {} 轮 {} 无改善)".format(cfg.early_stop_patience, cfg.early_stop_metric))
             break
 
     total_train_time = time.time() - train_start_time
@@ -502,8 +582,12 @@ def train_binary_classification(cfg, build_model_fn, title):
         "总耗时: {}".format(Logger.format_duration(total_train_time)),
         "平均每轮: {}".format(Logger.format_duration(total_train_time / epoch)),
         "完成轮数: {}/{}".format(epoch, cfg.epochs),
-        "最佳验证: Epoch {} - Loss: {:.4f}, Acc: {:.2f}%".format(
-            best_val["epoch"], best_val["loss"], best_val["accuracy"] * 100
+        "最佳验证: Epoch {} - {}: {:.4f}, Loss: {:.4f}, Acc: {:.2f}%".format(
+            best_val["epoch"],
+            cfg.early_stop_metric.upper(),
+            best_val.get(cfg.early_stop_metric, 0.0) if cfg.early_stop_metric != "loss" else best_val.get("loss", float("inf")),
+            best_val.get("loss", float("inf")),
+            best_val.get("accuracy", 0.0) * 100,
         ),
     ]
     logger.block("训练总结", summary)
@@ -538,15 +622,33 @@ def train_binary_classification(cfg, build_model_fn, title):
             writer.add_scalar("Test/F1", test_metrics["f1"], 0)
 
     writer.close()
+    
+    # 生成可视化图表
+    try:
+        figures_dir = run_dir / "figures"
+        figures_dir.mkdir(parents=True, exist_ok=True)
+        logger.info("\n正在生成训练曲线可视化...")
+        plot_torch_training_curves(
+            train_history=train_history,
+            val_history=val_history,
+            learning_rates=learning_rates,
+            save_dir=figures_dir,
+        )
+        logger.info("   训练曲线已保存到: {}".format(figures_dir))
+    except Exception as exc:
+        logger.warning("   生成训练曲线失败: {}".format(exc))
+    
     logger.info("\n所有任务完成!")
     logger.info("   最佳模型: {}".format(ckpt_best_path))
     logger.info("   最后模型: {}".format(ckpt_last_path))
-    logger.info("   TensorBoard: tensorboard --logdir={}\n".format(cfg.log_dir))
+    logger.info("   TensorBoard: tensorboard --logdir={}\n".format(tb_dir))
 
     return {
         "best_val": best_val,
         "tb_dir": str(tb_dir),
-        "ckpt_dir": str(ckpt_run_dir),
+        "ckpt_dir": str(run_dir),
+        "train_history": train_history,
+        "val_history": val_history,
     }
 
 

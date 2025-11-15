@@ -129,7 +129,7 @@ def _prepare_output_path(save_path, default_name):
     return save_path
 
 
-def plot_split_metrics(results, metric='pr', title=None, save_path=None, show_values=True):
+def plot_split_metrics(results, metric='pr', title=None, save_path=None):
     """绘制训练/验证/测试集上的 PR 曲线图。
     
     参数:
@@ -138,7 +138,6 @@ def plot_split_metrics(results, metric='pr', title=None, save_path=None, show_va
         metric: 用于输出文件命名的标识（默认: "pr"）
         title: 图标题（可选）
         save_path: 图像保存路径（可选）
-        show_values: 兼容旧参数，当前未使用
         
     返回:
         Path: 图像保存路径

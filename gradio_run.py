@@ -360,10 +360,10 @@ def create_gradio_interface(classifier, model_choices, default_model=None, thres
                     gr.Markdown("### 📊 预测结果")
                     result_text = gr.Markdown(
                         value="""
-<div style="text-align: center; padding: 40px; color: #999;">
-    <h3>📤 等待上传图片</h3>
-    <p>请在上传区域选择或拖拽一张图片</p>
-</div>
+                        <div style="text-align: center; padding: 40px; color: #999;">
+                            <h3>📤 等待上传图片</h3>
+                            <p>请在上传区域选择或拖拽一张图片</p>
+                        </div>
                         """,
                         elem_classes=["result-text"],
                     )

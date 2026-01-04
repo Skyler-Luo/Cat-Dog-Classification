@@ -1,4 +1,4 @@
-# 🐱🐶 Cat-Dog-Classification
+# 🐱vs🐶 Cat-Dog-Classification
 
 ![cat_vs_dog](./img/cat_vs_dog.png)
 
@@ -21,7 +21,7 @@
 
 ## 📑 目录
 
-- [🐱🐶 Cat-Dog-Classification](#-cat-dog-classification)
+- [🐱vs🐶 Cat-Dog-Classification](#vs-cat-dog-classification)
   - [📋 项目简介](#-项目简介)
   - [📑 目录](#-目录)
   - [📁 项目结构](#-项目结构)
